@@ -1,0 +1,965 @@
+{
+	"info": {
+		"_postman_id": "1b3e0863-8bba-4e50-a8e0-ac3b82dbb498",
+		"name": "Backend Highload: Midterm",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32742670"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\" : {\r\n        \"email\" : \"{{$randomEmail}}\",\r\n        \"username\" : \"user{{$randomAlphaNumeric}}\",\r\n        \"password\" : \"password\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/register/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"Token\", jsonData.user.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\" : {\r\n        \"email\" : \"user@user.com\",\r\n        \"username\" : \"user\",\r\n        \"password\" : \"password\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/login/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"login",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profile User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\" : {\r\n        \"email\" : \"user@gmail.com\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/profile/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"profile",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/profile/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"profile",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Create Order",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/orders/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order Detail",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/orders/1/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Product",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\" : 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/orders/1/add-product/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1",
+								"add-product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Product",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/orders/1/remove-product/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1",
+								"remove-product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove all Products",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/orders/1/remove-product/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1",
+								"remove-product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Payment",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/orders/1/payment/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1",
+								"payment",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delivery",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/orders/1/delivery/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1",
+								"delivery",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Finish",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/orders/1/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/orders/1/cancel/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1",
+								"cancel",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "Create",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"category_id\", jsonData.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"energy drinks\",\r\n    \"description\" : \"taurin caffein etc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/category/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"category",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/category/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"category",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\" : \"An energy drink is a type of functional beverage containing stimulant compounds, usually caffeine\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/category/{{category_id}}/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"{{category_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\" : \"An energy drink is a type of functional beverage containing stimulant compounds, usually caffeine\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/category/{{category_id}}/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"{{category_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Create",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"product_id\", jsonData.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category\" : {{category_id}},\r\n    \"name\" : \"Red Bull\",\r\n    \"description\" : \"Redbull okrilyaet\",\r\n    \"price\" : 550,\r\n    \"stock\" : 15\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/product/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/product/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\" : \"Redbull is a energy drink with a taurin,caffein\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/product/{{product_id}}/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"{{product_id}}",
+								""
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const token = pm.environment.get(\"Token\");\r",
+									"\r",
+									"if (token) {\r",
+									"    pm.request.headers.add({\r",
+									"        key: \"Authorization\",\r",
+									"        value: \"Token \" + token\r",
+									"    });\r",
+									"} else {\r",
+									"    console.log(\"Token not found in environment variables.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\" : \"An energy drink is a type of functional beverage containing stimulant compounds, usually caffeine\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/product/{{product_id}}/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"{{product_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
