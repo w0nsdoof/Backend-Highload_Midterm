@@ -205,11 +205,31 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"order_id\", jsonData.order_id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/orders/",
 							"host": [
@@ -251,14 +271,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/1/",
+							"raw": "{{BASE_URL}}/api/orders/{{order_id}}/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
 								"orders",
-								"1",
+								"{{order_id}}",
 								""
 							]
 						}
@@ -293,7 +313,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"product_id\" : 1\r\n}",
+							"raw": "{\r\n    \"product_id\": 2,\r\n    \"quantity\": 3\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -301,14 +321,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/1/add-product/",
+							"raw": "{{BASE_URL}}/api/orders/{{order_id}}/add-product/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
 								"orders",
-								"1",
+								"{{order_id}}",
 								"add-product",
 								""
 							]
@@ -342,15 +362,24 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"product_id\" : 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/1/remove-product/",
+							"raw": "{{BASE_URL}}/api/orders/{{order_id}}/remove-product/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
 								"orders",
-								"1",
+								"{{order_id}}",
 								"remove-product",
 								""
 							]
@@ -385,14 +414,14 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/1/remove-product/",
+							"raw": "{{BASE_URL}}/api/orders/{{order_id}}/remove-product/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
 								"orders",
-								"1",
+								"{{order_id}}",
 								"remove-product",
 								""
 							]
@@ -427,14 +456,14 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/1/payment/",
+							"raw": "{{BASE_URL}}/api/orders/{{order_id}}/payment/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
 								"orders",
-								"1",
+								"{{order_id}}",
 								"payment",
 								""
 							]
@@ -469,14 +498,14 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/1/delivery/",
+							"raw": "{{BASE_URL}}/api/orders/{{order_id}}/delivery/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
 								"orders",
-								"1",
+								"{{order_id}}",
 								"delivery",
 								""
 							]
@@ -511,14 +540,15 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/1/",
+							"raw": "{{BASE_URL}}/api/orders/{{order_id}}/finish/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
 								"orders",
-								"1",
+								"{{order_id}}",
+								"finish",
 								""
 							]
 						}
@@ -552,14 +582,14 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/api/orders/1/cancel/",
+							"raw": "{{BASE_URL}}/api/orders/{{order_id}}/cancel/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
 								"orders",
-								"1",
+								"{{order_id}}",
 								"cancel",
 								""
 							]
@@ -802,7 +832,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"category\" : {{category_id}},\r\n    \"name\" : \"Red Bull\",\r\n    \"description\" : \"Redbull okrilyaet\",\r\n    \"price\" : 550,\r\n    \"stock\" : 15\r\n}",
+							"raw": "{\r\n    \"category\" : {{category_id}},\r\n    \"name\" : \"{{$randomProductName}}\",\r\n    \"description\" : \"{{$randomProductAdjective}}\",\r\n    \"price\" : 1320,\r\n    \"stock\" : 15\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -810,13 +840,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/product/",
+							"raw": "{{BASE_URL}}/api/products/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"product",
+								"products",
 								""
 							]
 						}
@@ -829,13 +859,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/api/product/",
+							"raw": "{{BASE_URL}}/api/products/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"product",
+								"products",
 								""
 							]
 						}
@@ -888,13 +918,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/product/{{product_id}}/",
+							"raw": "{{BASE_URL}}/api/products/{{product_id}}/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"product",
+								"products",
 								"{{product_id}}",
 								""
 							],
@@ -945,13 +975,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/product/{{product_id}}/",
+							"raw": "{{BASE_URL}}/api/products/{{product_id}}/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
-								"product",
+								"products",
 								"{{product_id}}",
 								""
 							]
