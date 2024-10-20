@@ -1,10 +1,12 @@
-from rest_framework import serializers, status, permissions
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.api.tasks import send_order_confirmation_email
 from apps.api.models import Order, Product
 from apps.api.serializers import (
     OrderSerializer, OrderUserDetailSerializer,
+    AddProductSerializer, RemoveProductSerializer,
 )
 
 class OrdersView(APIView):
@@ -34,27 +36,29 @@ class OrderDetailView(APIView):
 class OrderAddProductView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    class AddProductSerializer(serializers.Serializer):
-        product_id = serializers.IntegerField()
-        quantity = serializers.IntegerField(default=1)
-
     def post(self, request, pk):
-        serializer = self.AddProductSerializer(data=request.data)
+        serializer = AddProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        order = Order.objects.get(pk=pk, customer=request.user)
-        product = Product.objects.get(pk=serializer.validated_data['product_id'])
+
+        try:
+            order = Order.objects.get(pk=pk, customer=request.user)
+        except Order.DoesNotExist:
+            return Response({"detail": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            product = Product.objects.get(pk=serializer.validated_data['product_id'])
+        except Product.DoesNotExist:
+            return Response({"detail": "Product not found."}, status=status.HTTP_404_NOT_FOUND)
+
         order.add_product(product, serializer.validated_data['quantity'])
+        
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class OrderRemoveProductView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    class RemoveProductSerializer(serializers.Serializer):
-        product_id = serializers.IntegerField()
-        quantity = serializers.IntegerField(default=1)
-
     def post(self, request, pk):
-        serializer = self.RemoveProductSerializer(data=request.data)
+        serializer = RemoveProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         order = Order.objects.get(pk=pk, customer=request.user)
         product = Product.objects.get(pk=serializer.validated_data['product_id'])
@@ -90,6 +94,7 @@ class OrderFinishView(APIView):
 
     def post(self, request, pk):
         order = Order.objects.get(pk=pk, customer=request.user)
+        
         order.finish_order()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -99,4 +104,25 @@ class OrderCancelView(APIView):
     def put(self, request, pk):
         order = Order.objects.get(pk=pk, customer=request.user)
         order.cancel_order()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class OrderFinishViewEmailConf(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            order = Order.objects.get(pk=pk, customer=request.user)
+        except Order.DoesNotExist:
+            return Response({"detail": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        user_email = order.customer.email  
+        order_id = order.id  
+
+        try:
+            send_order_confirmation_email.delay(order_id, user_email)
+        except Exception as e:
+            return Response({"detail": "Failed to send confirmation email."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        order.finish_order()
+
         return Response(status=status.HTTP_204_NO_CONTENT)

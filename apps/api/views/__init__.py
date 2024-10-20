@@ -6,7 +6,7 @@ from .orders_view import (
     OrderRemoveAllProductView,
     OrderPaymentView,
     OrderDeliveryView,
-    OrderFinishView,
+    OrderFinishView, OrderFinishViewEmailConf,
     OrderCancelView,
 )
 

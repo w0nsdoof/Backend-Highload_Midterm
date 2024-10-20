@@ -7,7 +7,7 @@ from .views import (
     OrderRemoveAllProductView,
     OrderPaymentView,
     OrderDeliveryView,
-    OrderFinishView,
+    OrderFinishView, OrderFinishViewEmailConf,
     OrderCancelView,
     
     ProductList, ProductDetail,
@@ -22,7 +22,7 @@ urlpatterns = [
     path('orders/<int:pk>/remove-all-products/', OrderRemoveAllProductView.as_view(), name='order-remove-all-products'),
     path('orders/<int:pk>/payment/', OrderPaymentView.as_view(), name='order-payment'),
     path('orders/<int:pk>/delivery/', OrderDeliveryView.as_view(), name='order-delivery'),
-    path('orders/<int:pk>/finish/', OrderFinishView.as_view(), name='order-finish'),
+    path('orders/<int:pk>/finish/', OrderFinishViewEmailConf.as_view(), name='order-finish'),
     path('orders/<int:pk>/cancel/', OrderCancelView.as_view(), name='order-cancel'),
 
     path("products/", ProductList.as_view(),  name='product-list'),

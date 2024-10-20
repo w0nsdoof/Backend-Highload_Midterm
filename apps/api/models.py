@@ -55,11 +55,7 @@ class Order(models.Model):
         if self.status != Order.STATUS_CHOICES.CREATED:
             raise ValueError("Unable to alter the order because it is no longer in 'CREATED' status")
 
-        order_item, created = self.items.get_or_create(product=product)
-        if not created:
-            order_item.quantity += quantity
-        else:
-            order_item.quantity = quantity
+        order_item, created = self.items.get_or_create(product=product, quantity=quantity)
         
         order_item.save()
 
@@ -108,10 +104,14 @@ class Order(models.Model):
             raise ValueError("Unable to ship this order, status should be 'PAID'")
         
         self.change_status(Order.STATUS_CHOICES.SHIPPED)
-
+        
+        # Logic for delivery
+        
+        self.change_status(Order.STATUS_CHOICES.DELIVERED)
+        
     def finish_order(self):
         if self.status != Order.STATUS_CHOICES.DELIVERED:
-            raise ValueError("Unable to ship this order, status should be 'PAID'")
+            raise ValueError("Unable to ship this order, status should be 'DELEVIRED'")
 
         self.change_status(Order.STATUS_CHOICES.FINISHED)
 
