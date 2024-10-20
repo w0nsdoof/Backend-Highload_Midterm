@@ -5,6 +5,11 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     
+    class Meta:
+        indexes = [
+            models.Index(fields=['name'])
+        ]
+    
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=0)
     name = models.CharField(max_length=100)
@@ -14,6 +19,12 @@ class Product(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        indexes =[
+            models.Index(fields=['category' , 'name']),
+            models.Index(fields=['price'])
+        ]
 
 class Order(models.Model):
     class STATUS_CHOICES(models.TextChoices):
@@ -29,6 +40,16 @@ class Order(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta: 
+        indexes = [
+            models.Index(fields=['customer']),
+            models.Index(fields=['status'])
+        ]
+
+    def change_status(self, new_status):
+        self.status = new_status
+        self.save()
 
     def add_product(self, product, quantity=1):
         if self.status != Order.STATUS_CHOICES.CREATED:
@@ -67,16 +88,10 @@ class Order(models.Model):
         if self.status != Order.STATUS_CHOICES.CREATED:
             raise ValueError("Unable to alter the order because it is no longer in 'CREATED' status")
         
-        # Loop through all items in the order and remove them
         for order_item in self.items.all():
             self.total_price -= order_item.product.price * order_item.quantity
             order_item.delete()
 
-        # After removing all products, save the order to update the total price
-        self.save()
-    
-    def change_status(self, new_status):
-        self.status = new_status
         self.save()
 
     def process_payment(self):
@@ -110,3 +125,8 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, related_name='items', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['order', 'product'])
+        ]
