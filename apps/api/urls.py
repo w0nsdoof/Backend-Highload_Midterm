@@ -25,9 +25,9 @@ urlpatterns = [
     path('orders/<int:pk>/finish/', OrderFinishView.as_view(), name='order-finish'),
     path('orders/<int:pk>/cancel/', OrderCancelView.as_view(), name='order-cancel'),
 
-    path("product/", ProductList.as_view(),  name='product-list'),
-    path("product/<int:pk>/", ProductDetail.as_view(), name='product-detail'),
+    path("products/", ProductList.as_view(),  name='product-list'),
+    path("products/<int:pk>/", ProductDetail.as_view(), name='product-detail'),
 
-    path("category/", CategoryList.as_view(),  name='category-list'),
-    path("category/<int:pk>/", CategoryDetail.as_view(), name='category-detail'),
+    path("categories/", CategoryList.as_view(),  name='category-list'),
+    path("categories/<int:pk>/", CategoryDetail.as_view(), name='category-detail'),
 ]

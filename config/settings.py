@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+# INSTALLED_APPS
+
 DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +46,7 @@ DJANGO_APPS = [
 
 THIRDPARTY_APPS = [
     'rest_framework',
+    'debug_toolbar',
 ]
 
 MY_APPS = [
@@ -53,19 +56,9 @@ MY_APPS = [
 
 INSTALLED_APPS = DJANGO_APPS + THIRDPARTY_APPS + MY_APPS
 
-# INSTALLED_APPS = [
-#     'django.contrib.admin',
-#     'django.contrib.auth',
-#     'django.contrib.contenttypes',
-#     'django.contrib.sessions',
-#     'django.contrib.messages',
-#     'django.contrib.staticfiles',
+# MIDDLEWARE
 
-    # 'apps.authentication',
-    # 'apps.api',
-# ]
-
-MIDDLEWARE = [
+DJANGO_MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -74,6 +67,23 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+THIRDPARTY_MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+]
+
+MIDDLEWARE = DJANGO_MIDDLEWARE + THIRDPARTY_MIDDLEWARE
+
+# Debug Toolbar
+
+INTERNAL_IPS = [
+    'localhost',
+    '127.0.0.1'
+]
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+}
 
 ROOT_URLCONF = 'config.urls'
 
